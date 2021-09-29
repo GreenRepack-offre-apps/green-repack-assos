@@ -1,3 +1,24 @@
 <resources>
+    <string name="api">http://10.0.2.2:5000</string>
+
+    <!--    <string name="api">https://green-repack.herokuapp.com/</string>-->
+
+
     <string name="app_name">Green Repack Assos</string>
+    <string name="title_activity_login">Se connecter à son espace associatif</string>
+    <string name="title_activity_register">Enregistrer une association</string>
+    <string name="prompt_email">RNA ID</string>
+    <string name="prompt_password">Password</string>
+    <string name="prompt_password_confirm">Password confirmation</string>
+    <string name="action_sign_in">Sign in here</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="sign_in_acces">Go for sign in</string>
+    <string name="sign_out_acces">Go for register</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="title_activity_projects_overview">ProjectsOverviewActivity</string>
+    <string name="tab_text_1">Projects</string>
+    <string name="tab_text_2">Ajouter un projet</string>
 </resources>
