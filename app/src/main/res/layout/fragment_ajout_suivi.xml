@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:fillViewport="true"
+    tools:context=".ui.projects.form.AjoutSuiviFragment">
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/linearLayout"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp"
+            android:layout_marginTop="20dp"
+            android:stretchColumns="1, 2">
+
+                <TextView
+                    android:id="@+id/add_proj"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="26dp"
+                    android:text="@string/add_projet_title"
+                    android:textSize="14sp"
+                    android:gravity="center"
+                    android:textFontWeight="800"/>
+
+                <EditText
+                    android:id="@+id/titre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/add_proj"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="36dp"
+                    android:hint="Donner un titre au projet"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/add_proj" />
+
+                <EditText
+                    android:id="@+id/description"
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:layout_below="@id/titre"
+                    app:layout_constraintTop_toBottomOf="@id/titre"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:ems="10"
+                    android:gravity="left|top"
+                    android:hint="Donner une description du projet.."
+                    android:inputType="textMultiLine"
+                    android:textSize="15sp"></EditText>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="26dp"
+                    android:layout_marginRight="26dp"
+                    android:text="Ajouter"
+                    android:layout_marginTop="40dp"/>
+                <TextView
+                    android:id="@+id/suivi_proj"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/suivi_projet_title"
+                    android:textSize="14sp"
+                    android:gravity="center"
+                    android:textFontWeight="800"
+                    android:layout_marginLeft="26dp"
+                    android:layout_marginTop="50dp"/>
+
+                <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:id="@+id/list_suivi"
+                    android:name="com.greenrepack.greenrepackassos.ui.projects.view.ProjetFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="60dp"
+
+                    app:layoutManager="LinearLayoutManager"
+                    tools:context=".ui.projects.view.ProjetsFragment"
+                    tools:listitem="@layout/fragment_projet" />
+
+        </LinearLayout>
+</ScrollView>

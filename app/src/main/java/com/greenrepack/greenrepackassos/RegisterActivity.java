@@ -75,8 +75,7 @@ public class RegisterActivity extends AppCompatActivity {
                         error_text.setText("Le compte pour cet identifiant rna existe déja !");
                         error_text.setVisibility(View.VISIBLE);
                     }else if(registerResult.getResult().getStatus().equals("SUCCES")) {
-                        Toast.makeText(this, "Vous pouvez vous connecter !", Toast.LENGTH_LONG);
-                        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                        //
                     }
                 }else{
                     error_text.setText(registerResult.getMsgError());
@@ -116,6 +115,8 @@ public class RegisterActivity extends AppCompatActivity {
                 public void onResponse(Call<Status> call, Response<Status> response) {
                     if(response.isSuccessful()) {
                         registerResult.setResult(response.body());
+                        //Toast.makeText(this, "Vous pouvez vous connecter !", Toast.LENGTH_LONG);
+                        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                     }
                 }
 

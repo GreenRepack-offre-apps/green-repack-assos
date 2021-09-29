@@ -21,4 +21,7 @@
     <string name="title_activity_projects_overview">ProjectsOverviewActivity</string>
     <string name="tab_text_1">Projects</string>
     <string name="tab_text_2">Ajouter un projet</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="add_projet_title">Ajouter un projet</string>
+    <string name="suivi_projet_title">Suivi de projet</string>
 </resources>

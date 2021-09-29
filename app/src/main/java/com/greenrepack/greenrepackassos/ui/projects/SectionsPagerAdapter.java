@@ -1,4 +1,4 @@
-package com.greenrepack.greenrepackassos.ui.main;
+package com.greenrepack.greenrepackassos.ui.projects;
 
 import android.content.Context;
 
@@ -9,6 +9,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.greenrepack.greenrepackassos.R;
+import com.greenrepack.greenrepackassos.ui.projects.form.AjoutSuiviFragment;
+import com.greenrepack.greenrepackassos.ui.projects.view.ProjetsFragment;
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
@@ -29,7 +31,11 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
-        return PlaceholderFragment.newInstance(position + 1);
+        if(position == 0){
+          return ProjetsFragment.newInstance();
+        }else{
+            return AjoutSuiviFragment.newInstance();
+        }
     }
 
     @Nullable
@@ -41,6 +47,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         // Show 2 total pages.
-        return 2;
+        return TAB_TITLES.length;
     }
 }

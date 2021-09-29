@@ -37,26 +37,32 @@ import com.greenrepack.greenrepackassos.service.assos.ReponseAssos;
 import com.greenrepack.greenrepackassos.ui.login.LoginViewModel;
 import com.greenrepack.greenrepackassos.ui.login.LoginViewModelFactory;
 import com.greenrepack.greenrepackassos.databinding.ActivityLoginBinding;
+import com.greenrepack.greenrepackassos.utils.AppContextKeys;
 import com.greenrepack.greenrepackassos.utils.AppContextValue;
+import com.greenrepack.greenrepackassos.utils.SessionStore;
 
 import java.time.Duration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
-
+    private static Logger LOGGER = Logger.getLogger("LoginActivity");
     private LoginViewModel loginViewModel;
     private ActivityLoginBinding binding;
     private ApiResult<ReponseAssos> loginServiceResult;
+    private SessionStore sessionStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
+        sessionStore = new SessionStore(getApplicationContext());
         loginServiceResult = new ApiResult<>();
 
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
@@ -106,37 +112,6 @@ public class LoginActivity extends AppCompatActivity {
                     updateUiWithUser(loginResult.getSuccess());
                 }
                 setResult(Activity.RESULT_OK);
-
-                error_text.setVisibility(View.GONE);
-                error_text.setText("");
-
-                final String formResult = evaluateForm(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
-                error_text.setText(formResult);
-                if(!formResult.isEmpty()) {
-                    error_text.setVisibility(View.VISIBLE);
-                }else {
-                    error_text.setVisibility(View.GONE);
-                   loginServiceCall(AccessAssosRequest.builder()
-                            .rna(usernameEditText.getText().toString())
-                            .password(passwordEditText.getText().toString())
-                            .build());
-                    if (!loginServiceResult.isHasError() && loginServiceResult.getResult() != null) {
-                        if (loginServiceResult.getResult().getStatus().equals("ECHEC_RNA")) {
-                            error_text.setText("Les informations sur l'identifiant sont invalides !");
-                            error_text.setVisibility(View.VISIBLE);
-                        } else if (loginServiceResult.getResult().getStatus().equals("ECHEC_RNA_PSWD")) {
-                            error_text.setText("L'identifiant rna ou le mot de passe est erroné !");
-                            error_text.setVisibility(View.VISIBLE);
-                        } else if (loginServiceResult.getResult().getStatus().equals("SUCCES")) {
-                            Toast.makeText(getApplicationContext(), "connected !! :)", Duration.ofSeconds(5).getNano()).show();
-                            startActivity(new Intent(getApplicationContext(), ProjectsOverviewActivity.class));
-                        }
-                    } else {
-                        error_text.setText(loginServiceResult.getMsgError());
-                        error_text.setVisibility(View.VISIBLE);
-                    }
-                }
                 //finish();
             }
         });
@@ -172,14 +147,44 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadingProgressBar.setVisibility(View.VISIBLE);
-                loginViewModel.login(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
+        loginButton.setOnClickListener(v ->{
+            loadingProgressBar.setVisibility(View.VISIBLE);
+            loginViewModel.login(usernameEditText.getText().toString(),
+                    passwordEditText.getText().toString());
+            error_text.setVisibility(View.GONE);
+            error_text.setText("");
+            final String formResult = evaluateForm(usernameEditText.getText().toString(),
+                    passwordEditText.getText().toString());
+            error_text.setText(formResult);
+            if(!formResult.isEmpty()) {
+                error_text.setVisibility(View.VISIBLE);
+            }else {
+                error_text.setVisibility(View.GONE);
+                loginServiceCall(AccessAssosRequest.builder()
+                        .rna(usernameEditText.getText().toString())
+                        .password(passwordEditText.getText().toString())
+                        .build());
+
+                LOGGER.log(Level.INFO, "loginServiceResult = "+ AppContextValue.jsonString(loginServiceResult.toString()));
+                if (!loginServiceResult.isHasError() && loginServiceResult.getResult() != null) {
+                    if (loginServiceResult.getResult().getStatus().equals("ECHEC_RNA")) {
+                        error_text.setText("Les informations sur l'identifiant sont invalides !");
+                        error_text.setVisibility(View.VISIBLE);
+                    } else if (loginServiceResult.getResult().getStatus().equals("ECHEC_RNA_PSWD")) {
+                        error_text.setText("L'identifiant rna ou le mot de passe est erroné !");
+                        error_text.setVisibility(View.VISIBLE);
+                    } else if (loginServiceResult.getResult().getStatus().equals("SUCCES")) {
+                        //
+                    }
+                } else {
+                    error_text.setText(loginServiceResult.getMsgError());
+                    error_text.setVisibility(View.VISIBLE);
+                }
             }
         });
+    }
+
+    private void log(String toString) {
     }
 
     private String evaluateForm(String rnaId, String pswd) {
@@ -207,6 +212,9 @@ public class LoginActivity extends AppCompatActivity {
                 public void onResponse(Call<ReponseAssos> call, Response<ReponseAssos> response) {
                     if(response.isSuccessful()) {
                         loginServiceResult.setResult(response.body());
+                        Toast.makeText(getApplicationContext(), "connected !! :)", Duration.ofSeconds(5).getNano()).show();
+                        sessionStore.save(AppContextKeys.RNA.name(), request.getRna());
+                        startActivity(new Intent(getApplicationContext(), ProjectsOverviewActivity.class));
                     }
                 }
                 @Override

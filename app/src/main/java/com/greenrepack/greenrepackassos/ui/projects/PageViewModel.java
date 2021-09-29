@@ -1,4 +1,4 @@
-package com.greenrepack.greenrepackassos.ui.main;
+package com.greenrepack.greenrepackassos.ui.projects;
 
 import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
@@ -12,7 +12,7 @@ public class PageViewModel extends ViewModel {
     private LiveData<String> mText = Transformations.map(mIndex, new Function<Integer, String>() {
         @Override
         public String apply(Integer input) {
-            return "Hello world from section: " + input;
+            return input == 1? "Projets associatif": "Ajout et suivie de projets";
         }
     });
 
