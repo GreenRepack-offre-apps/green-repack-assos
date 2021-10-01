@@ -9,12 +9,12 @@ import lombok.Data;
 @Builder
 public class Projet {
     private String idproj;
-    private String refAssos;
+    private String refassos;
     private String titre;
     private String description;
     private Date datecreate;
     private Date datevalid;
-    private String status;
+    private String statut;
     private String refusMsg;
     private double argentcollect;
 }

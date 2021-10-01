@@ -184,9 +184,6 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void log(String toString) {
-    }
-
     private String evaluateForm(String rnaId, String pswd) {
         String error = "";
         boolean valid = true;

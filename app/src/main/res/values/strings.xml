@@ -1,7 +1,7 @@
 <resources>
-    <string name="api">http://10.0.2.2:5000</string>
+<!--    <string name="api">http://10.0.2.2:5000</string>-->
 
-    <!--    <string name="api">https://green-repack.herokuapp.com/</string>-->
+    <string name="api">https://green-repack.herokuapp.com/</string>
 
 
     <string name="app_name">Green Repack Assos</string>
@@ -23,5 +23,7 @@
     <string name="tab_text_2">Ajouter un projet</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="add_projet_title">Ajouter un projet</string>
-    <string name="suivi_projet_title">Suivi de projet</string>
+    <string name="suivi_projet_title">Suivi de projet en attente ou refuser</string>
+
+    <string name="empty_content_msg">Le contenu de cette page est actuellement vide, vous pouvez effectuer de nouvelles opérations !! </string>
 </resources>

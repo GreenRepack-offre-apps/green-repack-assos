@@ -1,14 +1,18 @@
 package com.greenrepack.greenrepackassos.ui.projects.view;
 
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.greenrepack.greenrepackassos.R;
 import com.greenrepack.greenrepackassos.databinding.FragmentProjetBinding;
 import com.greenrepack.greenrepackassos.service.projects.Projet;
 import com.greenrepack.greenrepackassos.ui.projects.view.placeholder.PlaceholderContent.PlaceholderItem;
@@ -32,7 +36,6 @@ public class ProjetsRecyclerViewAdapter extends RecyclerView.Adapter<ProjetsRecy
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         return new ViewHolder(FragmentProjetBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
 
     }
@@ -42,14 +45,16 @@ public class ProjetsRecyclerViewAdapter extends RecyclerView.Adapter<ProjetsRecy
         holder.titre.setText(projetsAssos.get(position).getTitre());
         holder.description.setText(projetsAssos.get(position).getDescription());
         holder.argentRecolte.setText(projetsAssos.get(position).getArgentcollect() + " euros");
+        Projet project = projetsAssos.get(position);
+        if( project.getStatut().equals("EN_ATTENTE")) {
+            holder.statutBtn.setBackgroundResource(R.mipmap.ic_waiting);
+        }else if(project.getStatut().equals("REFUSER")) {
+            holder.statutBtn.setBackgroundResource(R.mipmap.ic_canceled);
+        }else if(project.getStatut().equals("VALIDER")) {
+            holder.statutBtn.setBackgroundResource(R.mipmap.ic_verified);
+        }
         holder.actionBtn.setOnClickListener(v -> {
-           if( projetsAssos.get(position).getStatus() == "EN_ATTENTE") {
 
-           }else if(projetsAssos.get(position).getStatus() == "REFUSER"){
-
-           }else{
-
-           }
         });
     }
 
@@ -63,6 +68,7 @@ public class ProjetsRecyclerViewAdapter extends RecyclerView.Adapter<ProjetsRecy
         public final TextView description;
         public final TextView argentRecolte;
         public ImageButton actionBtn;
+        public ImageButton statutBtn;
 
         public ViewHolder(FragmentProjetBinding binding) {
             super(binding.getRoot());
@@ -71,6 +77,7 @@ public class ProjetsRecyclerViewAdapter extends RecyclerView.Adapter<ProjetsRecy
             description = binding.description;
             argentRecolte = binding.argtCollt;
             actionBtn = binding.actionBtn;
+            statutBtn = binding.statutBtn;
         }
 
         @Override

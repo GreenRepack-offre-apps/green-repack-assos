@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:fillViewport="true"
-    tools:context=".ui.projects.form.AjoutSuiviFragment">
+    tools:context=".ui.projects.view.AjoutSuiviFragment">
         <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
@@ -56,6 +56,7 @@
                     android:inputType="textMultiLine"
                     android:textSize="15sp"></EditText>
                 <Button
+                    android:id="@+id/add"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="26dp"
@@ -85,6 +86,14 @@
                     app:layoutManager="LinearLayoutManager"
                     tools:context=".ui.projects.view.ProjetsFragment"
                     tools:listitem="@layout/fragment_projet" />
-
+                <TextView
+                    android:id="@+id/empty_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center|left"
+                    android:text="@string/empty_content_msg"
+                    android:layout_marginTop="-150dp"
+                    android:textSize="20sp" />
         </LinearLayout>
 </ScrollView>
