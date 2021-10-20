@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
@@ -49,7 +50,7 @@ public class ProjectsOverviewActivity extends FragmentActivity {
         setContentView(binding.getRoot());
         sessionStore = new SessionStore(getApplicationContext());
         assosResult = new ApiResult<>();
-        if(sessionStore.get(AppContextKeys.RNA.name(), "") != null && sessionStore.get(AppContextKeys.RNA.name(), "") != "") {
+        if(sessionStore.get(AppContextKeys.RNA.name(), "") != null || sessionStore.get(AppContextKeys.RNA.name(), "") != "") {
             assosApiCallService();
         }else{
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
@@ -61,7 +62,7 @@ public class ProjectsOverviewActivity extends FragmentActivity {
         tabs.setupWithViewPager(viewPager);
 
         FloatingActionButton fab = binding.fab;
-        fab.setVisibility(View.INVISIBLE);
+        //fab.setVisibility(View.INVISIBLE);
 
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -85,9 +86,10 @@ public class ProjectsOverviewActivity extends FragmentActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, assosResult.isHasError()?assosResult.getMsgError():
-                        assosResult.getResult() != null?assosResult.getResult().getStatus():"data not fetch",
-                        Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                Snackbar.make(view, "deconnection", 1).show();
+                sessionStore.clean(AppContextKeys.RNA.name());
+                sessionStore.clean(AppContextKeys.ID_ASSOS.name());
+                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             }
         });
 
