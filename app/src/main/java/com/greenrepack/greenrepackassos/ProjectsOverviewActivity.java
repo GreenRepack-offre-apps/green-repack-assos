@@ -8,6 +8,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,7 +35,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ProjectsOverviewActivity extends AppCompatActivity {
+public class ProjectsOverviewActivity extends FragmentActivity {
 
     private static Logger LOGGER = Logger.getLogger("ProjectsOverviewActivity");
     private ActivityProjectsOverviewBinding binding;
@@ -92,6 +93,7 @@ public class ProjectsOverviewActivity extends AppCompatActivity {
 
 
     }
+
     void assosApiCallService(){
         try{
             AssosApiCall apiCall = ApiBuilder.builder(getApplicationContext()).create(AssosApiCall.class);

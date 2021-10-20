@@ -42,7 +42,7 @@ import retrofit2.Response;
  * Use the {@link AjoutSuiviFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AjoutSuiviFragment extends Fragment {
+public class AjoutSuiviFragment extends Fragment implements ProjetsRecyclerViewAdapter.ProjetsRecyclerViewAdapterListener {
 
     private String mParam1;
     private String mParam2;
@@ -50,6 +50,8 @@ public class AjoutSuiviFragment extends Fragment {
     private SessionStore sessionStore;
     private ApiResult<ResponseData<List<Projet>>> projetsSuiviResult;
     private ApiResult<Status> projetsFormResult;
+
+    private ApiResult<Status> deleteResult;
     RecyclerView recyclerView;
     TextView emptyContent;
     EditText titreInput;
@@ -69,6 +71,7 @@ public class AjoutSuiviFragment extends Fragment {
         super.onCreate(savedInstanceState);
         projetsSuiviResult = new ApiResult<>();
         projetsFormResult = new ApiResult<>();
+        deleteResult = new ApiResult<>();
     }
 
     @Override
@@ -97,6 +100,25 @@ public class AjoutSuiviFragment extends Fragment {
         });
         return root;
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        getProjectsEnAttenteAssosCallService(getContext());
+    }
+
+    private void buildAdapter(Context context) {
+        List<Projet> projetList = projetsSuiviResult.getResult().getData().stream()
+                .filter(p -> !p.getStatut().equals(ProjetStatut.VALIDER.name()))
+                .collect(Collectors.toList());
+        if(!projetList.isEmpty()){
+            emptyContent.setVisibility(View.GONE);
+            //recyclerView.setNestedScrollingEnabled(false);
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            recyclerView.setAdapter(new ProjetsRecyclerViewAdapter(getContext(), projetList, this));
+        }else{
+            emptyContent.setVisibility(View.VISIBLE);
+        }
+    }
 
     public void getProjectsEnAttenteAssosCallService(Context context) {
         try{
@@ -107,17 +129,8 @@ public class AjoutSuiviFragment extends Fragment {
                         public void onResponse(Call<ResponseData<List<Projet>>> call, Response<ResponseData<List<Projet>>> response) {
                             if (response.isSuccessful()) {
                                 projetsSuiviResult.setResult(response.body());
-                                List<Projet> projetList = projetsSuiviResult.getResult().getData().stream()
-                                        .filter(p -> !p.getStatut().equals(ProjetStatut.VALIDER.name()))
-                                        .collect(Collectors.toList());
-                                if(!projetList.isEmpty()){
-                                    emptyContent.setVisibility(View.GONE);
-                                    //recyclerView.setNestedScrollingEnabled(false);
-                                    recyclerView.setLayoutManager(new LinearLayoutManager(context));
-                                    recyclerView.setAdapter(new ProjetsRecyclerViewAdapter(getContext(), projetList));
-                                }else{
-                                    emptyContent.setVisibility(View.VISIBLE);
-                                }
+                                buildAdapter(context);
+
                             } else {
                                 projetsSuiviResult.setHasError(true);
                                 projetsSuiviResult.setMsgError(AppContextValue.SERVICE_ERROR_MSG);
@@ -172,5 +185,44 @@ public class AjoutSuiviFragment extends Fragment {
             projetsFormResult.setMsgError(AppContextValue.SERVICE_ERROR_MSG);
             e.printStackTrace();
         }
+    }
+
+    void removeProjectCallService(String idProject){
+        try{
+            ProjectApiCall apiCall = ApiBuilder.builder(getContext()).create(ProjectApiCall.class);
+            apiCall.removeOne(idProject)
+                    .enqueue(new Callback<Status>() {
+                        @Override
+                        public void onResponse(Call<Status> call, Response<Status> response) {
+                            if (response.isSuccessful()) {
+                                deleteResult.setResult(response.body());
+                                if(deleteResult.getResult().equals("SUCCES")) {
+//                                    Projet myPrj = projetsAssos.stream().filter(p -> idProject.equals(p.getIdproj())).findAny().get();
+//                                    projetsAssos.remove(myPrj);
+                                    getProjectsEnAttenteAssosCallService(getContext());
+                                }
+                            } else {
+                                deleteResult.setHasError(true);
+                                deleteResult.setMsgError(AppContextValue.SERVICE_ERROR_MSG);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Status> call, Throwable t) {
+                            deleteResult.setHasError(true);
+                            deleteResult.setMsgError(AppContextValue.SERVICE_ERROR_MSG);
+                            t.printStackTrace();
+                        }
+                    });
+        }catch (Exception e){
+            deleteResult.setHasError(true);
+            deleteResult.setMsgError(AppContextValue.SERVICE_ERROR_MSG);
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onClickToRemove(int position, String idprojet) {
+        removeProjectCallService(idprojet);
     }
 }

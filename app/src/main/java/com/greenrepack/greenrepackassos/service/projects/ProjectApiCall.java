@@ -22,6 +22,6 @@ public interface ProjectApiCall {
     @GET("/api/association/projets/list")
     Call<ResponseData<List<Projet>>> getAllWithRna(@Query(value = "rna") String rna);
 
-    @DELETE("/api/association/projects/remove")
+    @GET("/api/association/projets/remove")
     Call<Status> removeOne(@Query(value = "idproj") String idproj);
 }

@@ -16,6 +16,7 @@
             android:layout_height="match_parent"
             android:padding="5dp"
             android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             android:stretchColumns="1, 2">
 
                 <TextView
@@ -80,7 +81,7 @@
                     android:id="@+id/list_suivi"
                     android:name="com.greenrepack.greenrepackassos.ui.projects.view.ProjetFragment"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="800dp"
                     android:layout_marginTop="60dp"
 
                     app:layoutManager="LinearLayoutManager"

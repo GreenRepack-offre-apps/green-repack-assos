@@ -17,6 +17,7 @@ import com.greenrepack.greenrepackassos.databinding.FragmentProjetBinding;
 import com.greenrepack.greenrepackassos.service.ApiBuilder;
 import com.greenrepack.greenrepackassos.service.ApiResult;
 import com.greenrepack.greenrepackassos.service.ResponseData;
+import com.greenrepack.greenrepackassos.service.Status;
 import com.greenrepack.greenrepackassos.service.projects.ProjectApiCall;
 import com.greenrepack.greenrepackassos.service.projects.Projet;
 import com.greenrepack.greenrepackassos.service.projects.ProjetStatut;
@@ -35,7 +36,7 @@ import retrofit2.Response;
 /**
  * A fragment representing a list of Items.
  */
-public class ProjetsFragment extends Fragment {
+public class ProjetsFragment extends Fragment implements ProjetsRecyclerViewAdapter.ProjetsRecyclerViewAdapterListener {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -43,6 +44,7 @@ public class ProjetsFragment extends Fragment {
     private SessionStore sessionStore;
     RecyclerView recyclerView;
     TextView emptyContent;
+    private ApiResult<Status> deleteResult;
 
     public ProjetsFragment() {
     }
@@ -58,6 +60,7 @@ public class ProjetsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         projetsResult = new ApiResult<>();
+        deleteResult = new ApiResult<>();
     }
 
     @Override
@@ -79,26 +82,36 @@ public class ProjetsFragment extends Fragment {
         getProjectsValidAssosCallService(getContext());
     }
 
+    @Override
+    public void onClickToRemove(int position, String idprojet) {
+        removeProjectCallService(idprojet);
+    }
+
+    void buildAdapter(Context context) {
+        List<Projet> projetList = projetsResult.getResult().getData().stream()
+                .filter(p -> p.getStatut().equals(ProjetStatut.VALIDER.name()))
+                .collect(Collectors.toList());
+        if(!projetList.isEmpty()) {
+            emptyContent.setVisibility(View.GONE);
+//                                    recyclerView.setNestedScrollingEnabled(false);
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            recyclerView.setAdapter(new ProjetsRecyclerViewAdapter(getContext(), projetList, this));
+        }else{
+            emptyContent.setVisibility(View.VISIBLE);
+        }
+    }
+
     public void getProjectsValidAssosCallService(Context context) {
         try{
             ProjectApiCall apiCall = ApiBuilder.builder(getContext()).create(ProjectApiCall.class);
-            apiCall.getAllWithRna(sessionStore.get(AppContextKeys.RNA.name(), ""))
+            apiCall.getAllWithRna(
+                    sessionStore.get(AppContextKeys.RNA.name(), ""))
                     .enqueue(new Callback<ResponseData<List<Projet>>>() {
                         @Override
                         public void onResponse(Call<ResponseData<List<Projet>>> call, Response<ResponseData<List<Projet>>> response) {
                             if (response.isSuccessful()) {
                                 projetsResult.setResult(response.body());
-                                List<Projet> projetList = projetsResult.getResult().getData().stream()
-                                        .filter(p -> p.getStatut().equals(ProjetStatut.VALIDER.name()))
-                                        .collect(Collectors.toList());
-                                if(!projetList.isEmpty()) {
-                                    emptyContent.setVisibility(View.GONE);
-//                                    recyclerView.setNestedScrollingEnabled(false);
-                                    recyclerView.setLayoutManager(new LinearLayoutManager(context));
-                                    recyclerView.setAdapter(new ProjetsRecyclerViewAdapter(getContext(), projetList));
-                                }else{
-                                    emptyContent.setVisibility(View.VISIBLE);
-                                }
+                                buildAdapter(context);
                             } else {
                                 projetsResult.setHasError(true);
                                 projetsResult.setMsgError(AppContextValue.SERVICE_ERROR_MSG);
@@ -118,4 +131,39 @@ public class ProjetsFragment extends Fragment {
             e.printStackTrace();
         }
     }
+
+    void removeProjectCallService(String idProject){
+        try{
+            ProjectApiCall apiCall = ApiBuilder.builder(getContext()).create(ProjectApiCall.class);
+            apiCall.removeOne(idProject)
+                    .enqueue(new Callback<Status>() {
+                        @Override
+                        public void onResponse(Call<Status> call, Response<Status> response) {
+                            if (response.isSuccessful()) {
+                                deleteResult.setResult(response.body());
+                                if(deleteResult.getResult().equals("SUCCES")) {
+//                                    Projet myPrj = projetsAssos.stream().filter(p -> idProject.equals(p.getIdproj())).findAny().get();
+//                                    projetsAssos.remove(myPrj);
+                                    getProjectsValidAssosCallService(getContext());
+                                }
+                            } else {
+                                deleteResult.setHasError(true);
+                                deleteResult.setMsgError(AppContextValue.SERVICE_ERROR_MSG);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Status> call, Throwable t) {
+                            deleteResult.setHasError(true);
+                            deleteResult.setMsgError(AppContextValue.SERVICE_ERROR_MSG);
+                            t.printStackTrace();
+                        }
+                    });
+        }catch (Exception e){
+            deleteResult.setHasError(true);
+            deleteResult.setMsgError(AppContextValue.SERVICE_ERROR_MSG);
+            e.printStackTrace();
+        }
+    }
+
 }
