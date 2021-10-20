@@ -23,7 +23,7 @@
         android:id="@+id/argt_collt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="200dp"
+        android:layout_marginLeft="100dp"
         android:layout_marginTop="36dp"
         android:textAppearance="?attr/textAppearanceListItem"
         android:textFontWeight="500" />
@@ -33,7 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="66dp"
         android:textAppearance="?attr/textAppearanceListItem" />
 
     <ImageButton
@@ -48,7 +48,7 @@
         android:id="@+id/statut_btn"
         android:layout_width="50dp"
         android:layout_height="46dp"
-        android:layout_marginLeft="340dp"
+        android:layout_marginLeft="220dp"
         android:layout_marginTop="6dp"
         android:clickable="false"
         android:background="@mipmap/ic_verified" />
