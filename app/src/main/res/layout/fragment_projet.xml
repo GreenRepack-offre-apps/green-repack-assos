@@ -23,7 +23,7 @@
         android:id="@+id/argt_collt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="100dp"
+        android:layout_marginLeft="50dp"
         android:layout_marginTop="36dp"
         android:textAppearance="?attr/textAppearanceListItem"
         android:textFontWeight="500" />
@@ -38,18 +38,18 @@
 
     <ImageButton
         android:id="@+id/action_btn"
-        android:layout_width="50dp"
-        android:layout_height="46dp"
-        android:layout_marginLeft="290dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="300dp"
+        android:layout_marginTop="26dp"
         android:clickable="true"
         android:background="@mipmap/ic_remove" />
     <ImageButton
         android:id="@+id/statut_btn"
-        android:layout_width="50dp"
-        android:layout_height="46dp"
+        android:layout_width="40dp"
+        android:layout_height="36dp"
         android:layout_marginLeft="220dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="26dp"
         android:clickable="false"
         android:background="@mipmap/ic_verified" />
 </RelativeLayout>
